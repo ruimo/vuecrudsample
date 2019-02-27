@@ -5,16 +5,18 @@ services:
     ports:
      - "8090:8000"
     volumes:
-     - ${PWD}/django:/work
-    user: "${UID}:${GID}"
+     - ${_PWD}/django:/work
+    user: "${_UID}:${_GID}"
     working_dir: /work
     command: python manage.py runserver 0.0.0.0:8000
   front:
     image: "vuesample/crud"
+    environment:
+     - HOME=/work
     ports:
      - "8080:8080"
     volumes:
-     - ${PWD}/vue/crud:/work
-    user: "${UID}:${GID}"
+     - ${_PWD}/vue/crud:/work
+    user: "${_UID}:${_GID}"
     working_dir: /work
     command: sleep infinity

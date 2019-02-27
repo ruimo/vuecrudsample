@@ -1,5 +1,5 @@
 #!/bin/sh
-export UID=$(id -u)
-export GID=$(id -g)
-export PWD=$(pwd)
+export _UID=$(id -u)
+export _GID=$(id -g)
+export _PWD=$(pwd)
 docker-compose $*
