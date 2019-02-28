@@ -7,16 +7,40 @@ const axios = require("axios");
 
 export default new Vuex.Store({
   state: {
-    userList: []
+    userList: [],
+    editingUser: {
+      userName: "",
+      email: "",
+      url: ""
+    }
   },
   getters: {
     userList(state) {
       return state.userList;
+    },
+    editingUser(state) {
+      return state.editingUser;
     }
   },
   mutations: {
     setUserList(state, l) {
       state.userList = l;
+    },
+    setEditingUserName(state, n) {
+      state.editingUser.userName = n;
+    },
+    setEditingEmail(state, e) {
+      state.editingUser.email = e;
+    },
+    setEditingUser(state, u) {
+      state.editingUser = u;
+    },
+    clearEditingUser(state) {
+      state.editingUser = {
+        userName: "",
+        email: "",
+        url: ""
+      };
     }
   },
   actions: {
@@ -29,14 +53,30 @@ export default new Vuex.Store({
         alert("error occurred. " + JSON.stringify(error));
       });
     },
-    createUser(ctx, parms) {
+    createUser(ctx) {
       axios.post("http://localhost:8090/users/", {
-        username: parms.userName,
-        email: parms.email,
+        username: ctx.state.editingUser.userName,
+        email: ctx.state.editingUser.email,
         groups: []
       })
       .then(() => {
         alert("registered.");
+        ctx.commit("clearEditingUser");
+        ctx.dispatch("updateUserList");
+      })
+      .catch(function(error) {
+        alert("error occurred. " + JSON.stringify(error));
+      });
+    },
+    updateUser(ctx) {
+      axios.put(ctx.state.editingUser.url, {
+        username: ctx.state.editingUser.userName,
+        email: ctx.state.editingUser.email,
+        groups: []
+      })
+      .then(() => {
+        alert("updated.");
+        ctx.commit("clearEditingUser");
         ctx.dispatch("updateUserList");
       })
       .catch(function(error) {

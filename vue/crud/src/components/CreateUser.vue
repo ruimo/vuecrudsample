@@ -12,6 +12,7 @@
 
     <div class="submit formField">
       <button v-on:click="createUser">Register</button>
+      <button v-on:click="updateUser" v-if="isSelected">Update</button>
     </div>
   </div>
 </template>
@@ -19,18 +20,39 @@
 <script>
 export default {
   name: "CreateUser",
-  data() {
-    return {
-      userName: "",
-      email: ""
-    };
-  },
   methods: {
     createUser() {
-      this.$store.dispatch("createUser", {userName: this.userName, email: this.email}).then(() => {
-        this.userName = "";
-        this.email = "";
-      });
+      this.$store.dispatch("createUser")
+    },
+    updateUser() {
+      this.$store.dispatch("updateUser")
+    }
+  },
+  computed: {
+    isSelected: {
+      get () {
+        if (this.$store.state.editingUser.url) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
+    userName: {
+      get () {
+        return this.$store.state.editingUser.userName
+      },
+      set (value) {
+        this.$store.commit('setEditingUserName', value)
+      }
+    },
+    email: {
+      get () {
+        return this.$store.state.editingUser.email
+      },
+      set (value) {
+        this.$store.commit('setEditingEmail', value)
+      }
     }
   }
 }
